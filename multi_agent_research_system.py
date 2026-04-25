@@ -13,6 +13,7 @@ from langgraph.graph.message import add_messages
 from langgraph.types import Send
 from langchain_groq import ChatGroq
 from langchain_core.messages import HumanMessage, AIMessage, SystemMessage, BaseMessage
+from tavily import TavilyClient
 from typing_extensions import TypedDict, Annotated
 from typing import Literal
 from pydantic import BaseModel, Field
@@ -61,8 +62,9 @@ def supervisor(state: ResearchState) -> dict:
         [
             SystemMessage(
                 content=(
-                    "You are a research supervisor. Given a topic, generate exactly 3 "
-                    "specific search queries that will cover different angles of the topic. "
+                    "You are a research supervisor. Given a topic, generate between 3 and 5 "
+                    "specific search queries based on how complex the topic is. "
+                    "Simple topics need 3, complex topics need 5. "
                     "Return ONLY a JSON array of strings. No markdown formatting."
                 )
             ),
@@ -80,8 +82,10 @@ def supervisor(state: ResearchState) -> dict:
             f"{state['topic']} practical applications",
         ]
 
+    # print(f"[SUPERVISOR] Generated {len(queries)} queries: {queries}") 
+
     return {
-        "search_queries": queries[:3],
+        "search_queries": queries[:5],
         "messages": [
             AIMessage(
                 content=f"[SUPERVISOR]: Planned {len(queries)} research queries: {queries}",
@@ -97,34 +101,62 @@ def supervisor(state: ResearchState) -> dict:
 # ============================================================
 
 
+# def search_agent(state: SearchTaskState) -> dict:
+#     """
+#     Executes one search query and returns findings.
+#     Each instance runs in parallel via the Send API.
+#     """
+#     query = state["search_query"]
+
+#     response = llm.invoke(
+#         [
+#             SystemMessage(
+#                 content=(
+#                     "You are a web research agent. For the given search query, "
+#                     "provide 2-3 key findings. Each finding should have a 'title' "
+#                     "and 'detail' field. Return a JSON array. No markdown."
+#                 )
+#             ),
+#             HumanMessage(content=f"Search query: {query}"),
+#         ]
+#     )
+
+#     try:
+#         results = json.loads(response.content)
+#     except json.JSONDecodeError:
+#         results = [{"title": query, "detail": response.content}]
+
+#     # Tag each finding with the query it came from
+#     for r in results:
+#         r["source_query"] = query
+
+#     return {"findings": results}
+
 def search_agent(state: SearchTaskState) -> dict:
     """
     Executes one search query and returns findings.
     Each instance runs in parallel via the Send API.
     """
     query = state["search_query"]
-
-    response = llm.invoke(
-        [
-            SystemMessage(
-                content=(
-                    "You are a web research agent. For the given search query, "
-                    "provide 2-3 key findings. Each finding should have a 'title' "
-                    "and 'detail' field. Return a JSON array. No markdown."
-                )
-            ),
-            HumanMessage(content=f"Search query: {query}"),
-        ]
+    
+    tavily = TavilyClient()  # picks up TAVILY_API_KEY from .env automatically
+    response = tavily.search(
+        query=query,
+        search_depth="fast",  # deep mode
+        max_results=3
     )
 
-    try:
-        results = json.loads(response.content)
-    except json.JSONDecodeError:
-        results = [{"title": query, "detail": response.content}]
+    results = []
+    for r in response.get("results", []):
+        results.append({
+            "title": r.get("title", query),
+            "detail": r.get("content", "")[:1000],
+            "source_query": query
+        })
 
-    # Tag each finding with the query it came from
-    for r in results:
-        r["source_query"] = query
+    # Fallback if Tavily returns nothing
+    if not results:
+        results = [{"title": query, "detail": "No results found.", "source_query": query}]
 
     return {"findings": results}
 
@@ -417,7 +449,7 @@ def demo_full_research():
     print("Multi-Agent Research System Demo")
     print("=" * 60)
 
-    topic = "The impact of AI agents on software development in 2026"
+    topic = "Exercise"
     print(f"Topic: {topic}\n")
 
     result = system.invoke(
