@@ -173,7 +173,8 @@ with tab2:
                 "quality_feedback": "",
                 "iteration": 0,
             })
- 
+            add_log(f"[SUPERVISOR]  Queries for Web Search: {result['search_queries']}")
+            add_log(f"[SEARCH]      Total findings collected: {len(result['findings'])}")
             add_log("[ANALYST]     Synthesising findings...")
             add_log("[WRITER]      Drafting report...")
             add_log(f"[QUALITY]     Score: {result['quality_score']:.2f}  |  Iterations: {result['iteration']}")
