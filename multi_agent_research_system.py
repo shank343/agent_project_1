@@ -8,6 +8,7 @@ Patterns used:
 - Shared state / blackboard (4.6)
 - Iterative refinement loop
 """
+import time
 from langgraph.graph import StateGraph, START, END
 from langgraph.graph.message import add_messages
 from langgraph.types import Send
@@ -181,6 +182,7 @@ def dispatch_searches(state: ResearchState) -> list[Send]:
 
 def analyst(state: ResearchState) -> dict:
     """Reads all findings from the blackboard and synthesizes."""
+    time.sleep(3)
     findings_text = json.dumps(state["findings"], indent=2)
 
     response = llm.invoke(
@@ -219,6 +221,7 @@ def analyst(state: ResearchState) -> dict:
 
 def report_writer(state: ResearchState) -> dict:
     """Writes a structured research report from the analysis."""
+    time.sleep(3)
 
     # Include quality feedback if this is a revision
     revision_note = ""

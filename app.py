@@ -31,67 +31,116 @@ st.markdown("""
     min-height: 120px;
     color: #00ffcc;
 }
+.log-line { margin: 0; padding: 0; }
+.log-supervisor { color: #ffaa00; }
+.log-search     { color: #4488ff; }
+.log-analyst    { color: #aa66ff; }
+.log-writer     { color: #00ffcc; }
+.log-quality    { color: #ff6688; }
+.log-done       { color: #44ff88; }
+.log-system     { color: #445566; }
 </style>
 """, unsafe_allow_html=True)
  
 # ── Header ──────────────────────────────────────────────────────
-st.markdown("""
-<div class="hero-title">Multi<span class="hero-accent">.</span>Agent<br>Research System</div>
-<div class="hero-sub">// Powered by LangGraph &nbsp;·&nbsp; Groq &nbsp;·&nbsp; Parallel AI Agents</div>
-""", unsafe_allow_html=True)
+st.markdown("## 🔬 Multi-Agent Research System")
+st.caption("Powered by LangGraph · Groq · Tavily · Parallel AI Agents")
+st.markdown("[View on GitHub](https://github.com/shank343/agent_project_1)")
  
 # ── Tabs ────────────────────────────────────────────────────────
 tab1, tab2 = st.tabs(["ABOUT", "RESEARCH"])
+ 
  
 # ════════════════════════════════════════════════════════════════
 # TAB 1 — ABOUT
 # ════════════════════════════════════════════════════════════════
 with tab1:
  
-    st.markdown('<div class="section-label">Project Overview</div>', unsafe_allow_html=True)
- 
-    # Placeholder: writeup
+    # ── Author card ─────────────────────────────────────────────
     st.markdown("""
-    <div class="placeholder-card">
-        <span class="icon">📝</span>
-        <strong>PROJECT WRITEUP PLACEHOLDER</strong><br><br>
-        Replace this with your project description —<br>
-        what it does, why you built it, what you learned.
+    <div style="display:flex; align-items:center; gap:1.5rem; padding:1.25rem 1.5rem;
+                background:#f8f9ff; border:1px solid #e0e0f0; border-radius:10px;
+                margin-bottom:2rem;">
+        <div style="width:48px; height:48px; border-radius:50%; background:#e8f4ff;
+                    border:2px solid #4488ff; display:flex; align-items:center;
+                    justify-content:center; font-size:1.3rem; flex-shrink:0;">👤</div>
+        <div>
+            <div style="font-size:1.05rem; font-weight:700; color:#111133;">Shashank M</div>
+            <div style="font-size:0.78rem; color:#4488ff; letter-spacing:0.08em;
+                        font-family:monospace; margin-top:0.2rem;">
+                DATA SCIENTIST · ROLLS-ROYCE
+            </div>
+        </div>
     </div>
     """, unsafe_allow_html=True)
  
-    st.markdown('<div class="section-label">Agent Pipeline</div>', unsafe_allow_html=True)
+    # ── Heading ─────────────────────────────────────────────────
+    st.markdown("### Multi-Agentic System")
+    st.markdown("---")
  
-    # Pipeline diagram
+    # ── Project description ──────────────────────────────────────
     st.markdown("""
-    <div class="pipeline">
-        <div class="agent-node highlight">USER TOPIC</div>
-        <span class="arrow">→</span>
-        <div class="agent-node">SUPERVISOR</div>
-        <span class="arrow">→</span>
-        <div class="agent-node">SEARCH ×3-5<br><span style="font-size:0.6rem;color:#333355">parallel</span></div>
-        <span class="arrow">→</span>
-        <div class="agent-node">ANALYST</div>
-        <span class="arrow">→</span>
-        <div class="agent-node">WRITER</div>
-        <span class="arrow">→</span>
-        <div class="agent-node">QUALITY CHECK</div>
-        <span class="arrow">→</span>
-        <div class="agent-node highlight">REPORT</div>
-    </div>
-    """, unsafe_allow_html=True)
+    This project implements a fully autonomous, multi-agent research pipeline built on
+    **LangGraph** — a framework for orchestrating stateful, graph-based AI workflows.
+    Given any research topic, the system independently plans, searches, analyses, writes,
+    and self-reviews a structured report with no human intervention required beyond the
+    initial prompt.
  
-    st.markdown('<div class="section-label">Flow Diagram</div>', unsafe_allow_html=True)
+    The system is composed of five specialised agents, each with a distinct role:
+    """)
  
-    # Placeholder: flow diagram image
+    col1, col2 = st.columns(2)
+ 
+    with col1:
+        st.markdown("""
+        **🟢 Supervisor**
+        Receives the user's topic and dynamically determines the research scope —
+        generating between 3 and 5 targeted search queries depending on the complexity
+        of the subject matter.
+ 
+        ---
+ 
+        **🔵 Search Agents (Parallel)**
+        Multiple search agents are spawned simultaneously using LangGraph's Send API,
+        each executing an independent Tavily web search query. Results are collected in
+        a shared state blackboard, giving the system broad, real-time coverage of the topic.
+ 
+        ---
+ 
+        **🟣 Analyst**
+        Synthesises all gathered findings into a coherent analysis — identifying key themes,
+        surfacing contradictions, and distilling the most actionable insights across all
+        search results.
+        """)
+ 
+    with col2:
+        st.markdown("""
+        **🟡 Report Writer**
+        Transforms the analysis into a structured, professional report comprising an
+        executive summary, key findings, in-depth analysis, and specific recommendations.
+        On revision cycles, the writer explicitly incorporates feedback from the quality
+        checker.
+ 
+        ---
+ 
+        **🔴 Quality Checker**
+        Independently scores the report on completeness, clarity, and actionability on
+        a 0-1 scale. Reports scoring below 0.7 are returned to the writer with specific
+        feedback for revision. The system allows up to two rewrites before finalising
+        the output.
+        """)
+ 
     st.markdown("""
-    <div class="placeholder-card" style="min-height: 220px; display:flex; flex-direction:column; align-items:center; justify-content:center;">
-        <span class="icon">🗺️</span>
-        <strong>FLOW DIAGRAM PLACEHOLDER</strong><br><br>
-        Replace this with your LangGraph diagram image.<br>
-        <span style="font-size:0.7rem; margin-top:0.5rem;">Hint: your code already saves it as <code style="color:#00ffcc">research_graph.png</code></span>
-    </div>
-    """, unsafe_allow_html=True)
+    ---
+    The entire pipeline runs on **Groq's inference API** (llama-3.1-8b-instant &
+    llama-3.3-70b-versatile) and **Tavily** for live web search — making it fast,
+    capable, and fully free to run.
+    """)
+ 
+    # ── Process Flow ────────────────────────────────────────────
+    st.markdown("### Process Flow")
+ 
+    st.image("research_graph.png", use_container_width=True)
  
  
 # ════════════════════════════════════════════════════════════════
@@ -99,7 +148,7 @@ with tab1:
 # ════════════════════════════════════════════════════════════════
 with tab2:
  
-    st.markdown('<div class="section-label">Start a Research Run</div>', unsafe_allow_html=True)
+    st.markdown("#### Start a Research Run")
  
     col1, col2 = st.columns([5, 1])
     with col1:
@@ -113,9 +162,9 @@ with tab2:
         st.markdown("<div style='height:28px'></div>", unsafe_allow_html=True)
         run = st.button("▶ RUN", disabled=not topic.strip())
  
-    st.markdown('<hr class="thin-divider">', unsafe_allow_html=True)
+    st.markdown("---")
  
-    # ── Terminal log placeholder ─────────────────────────────
+    # ── Terminal log ─────────────────────────────────────────
     log_placeholder = st.empty()
     report_placeholder = st.empty()
  
@@ -155,11 +204,10 @@ with tab2:
         add_log("// Starting pipeline...")
         add_log("")
         add_log("[SUPERVISOR]  Planning search queries...")
+        add_log("[SEARCH]      Dispatching parallel agents...")
+        add_log("              Number of agents decided by supervisor (3-5)...")
  
         try:
-            add_log("[SEARCH]      Dispatching parallel agents...")
-            add_log("              Number of agents decided by supervisor (3-5)...")
- 
             research_system = get_research_system()
  
             result = research_system.invoke({
@@ -173,26 +221,39 @@ with tab2:
                 "quality_feedback": "",
                 "iteration": 0,
             })
-            add_log(f"[SUPERVISOR]  Queries for Web Search: {result['search_queries']}")
+ 
+            add_log(f"[SUPERVISOR]  Queries: {result['search_queries']}")
             add_log(f"[SEARCH]      Total findings collected: {len(result['findings'])}")
             add_log("[ANALYST]     Synthesising findings...")
-            add_log("[WRITER]      Drafting report...")
-            add_log(f"[QUALITY]     Score: {result['quality_score']:.2f}  |  Iterations: {result['iteration']}")
+ 
+            draft_count = 0
+            for msg in result['messages']:
+                if hasattr(msg, 'content'):
+                    content = msg.content
+                    if '[REPORT WRITER]' in content:
+                        draft_count += 1
+                        add_log(f"[WRITER]      Draft {draft_count} complete")
+                    elif '[QUALITY CHECK]' in content:
+                        add_log(f"[QUALITY]     {content[16:]}")
+ 
             add_log("")
+            add_log(f"[DONE]        Final Score: {result['quality_score']:.2f}  |  "
+                    f"Total Iterations: {result['iteration']}")
             add_log("✓ Pipeline complete.")
  
-            # ── Report ───────────────────────────────────
+            # ── Report metadata ───────────────────────────
             report_placeholder.markdown(f"""
-            <div class="report-wrapper">
-                <div class="report-meta">
-                    <div class="meta-item">QUALITY SCORE &nbsp;<span class="meta-value">{result['quality_score']:.2f}</span></div>
-                    <div class="meta-item">ITERATIONS &nbsp;<span class="meta-value">{result['iteration']}</span></div>
-                    <div class="meta-item">TOPIC &nbsp;<span class="meta-value">{topic[:60]}</span></div>
-                </div>
-            </div>
-            """, unsafe_allow_html=True)
+            **Quality Score:** `{result['quality_score']:.2f}` &nbsp;|&nbsp;
+            **Iterations:** `{result['iteration']}` &nbsp;|&nbsp;
+            **Topic:** {topic[:60]}
+            """)
  
+            st.markdown("---")
             st.markdown(result["report"])
  
         except Exception as e:
-            add_log(f"✗ Error: {str(e)}")
+            if "429" in str(e) or "rate_limit" in str(e):
+                add_log("✗ Rate limit hit — too many tokens at once.")
+                add_log("  Try a more specific topic and run again.")
+            else:
+                add_log(f"✗ Error: {str(e)}")
