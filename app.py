@@ -209,18 +209,18 @@ with tab2:
  
         try:
             research_system = get_research_system()
- 
-            result = research_system.invoke({
-                "messages": [],
-                "topic": topic,
-                "search_queries": [],
-                "findings": [],
-                "analysis": "",
-                "report": "",
-                "quality_score": 0.0,
-                "quality_feedback": "",
-                "iteration": 0,
-            })
+            with st.spinner("Agents are working... this may take a minute or two."):
+                result = research_system.invoke({
+                    "messages": [],
+                    "topic": topic,
+                    "search_queries": [],
+                    "findings": [],
+                    "analysis": "",
+                    "report": "",
+                    "quality_score": 0.0,
+                    "quality_feedback": "",
+                    "iteration": 0,
+                })
  
             add_log(f"[SUPERVISOR]  Queries: {result['search_queries']}")
             add_log(f"[SEARCH]      Total findings collected: {len(result['findings'])}")
