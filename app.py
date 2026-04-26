@@ -1,10 +1,15 @@
 import streamlit as st
-import json
+from langsmith import Client, traceable
 from dotenv import load_dotenv
 from multi_agent_research_system import create_research_system
- 
+
+@traceable(name="research-system-run")
+def traced_invoke(system, payload):
+    return system.invoke(payload)
+
+client = Client()
 load_dotenv()
- 
+
 @st.cache_resource
 def get_research_system():
     return create_research_system()
@@ -210,7 +215,7 @@ with tab2:
         try:
             research_system = get_research_system()
             with st.spinner("Agents are working... this may take a minute or two."):
-                result = research_system.invoke({
+                result = traced_invoke(research_system, {
                     "messages": [],
                     "topic": topic,
                     "search_queries": [],
@@ -250,6 +255,17 @@ with tab2:
  
             st.markdown("---")
             st.markdown(result["report"])
+            runs = list(
+                client.list_runs(
+                    project_name="agent-project",
+                    filter='eq(name, "research-system-run")',
+                    limit=1
+                )
+            )
+
+            if runs:
+                share_link = client.share_run(runs[0].id)
+                st.markdown(f"🔍 [View LangSmith Trace]({share_link})")
  
         except Exception as e:
             if "429" in str(e) or "rate_limit" in str(e):

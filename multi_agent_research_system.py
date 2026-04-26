@@ -249,7 +249,7 @@ def report_writer(state: ResearchState) -> dict:
                 content=(
                     f"Topic: {state['topic']}\n\n"
                     f"Analysis:\n{state['analysis']}\n\n"
-                    f"Raw findings:\n{json.dumps(state['findings'][:6], indent=2)}"
+                    f"Raw findings:\n{json.dumps(state['findings'][::3], indent=2)}"
                 )
             ),
         ]

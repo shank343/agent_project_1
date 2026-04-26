@@ -10,6 +10,7 @@ dependencies = [
     "langchain>=1.2.15",
     "langchain-groq>=1.1.2",
     "langgraph>=1.1.9",
+    "langsmith>=0.7.35",
     "streamlit>=1.56.0",
     "tavily-python>=0.7.23",
     "uvicorn>=0.46.0",
