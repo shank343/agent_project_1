@@ -269,7 +269,6 @@ with tab2:
  
         except Exception as e:
             if "429" in str(e) or "rate_limit" in str(e):
-                add_log("✗ Rate limit hit — too many tokens at once.")
-                add_log("  Try a more specific topic and run again.")
+                st.error("✗ Rate limit hit — too many tokens at once. Try a more specific topic and run again.")
             else:
                 add_log(f"✗ Error: {str(e)}")
