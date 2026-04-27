@@ -25,6 +25,7 @@ st.set_page_config(
 st.markdown("""
 <style>
 #MainMenu, footer, header { visibility: hidden; }
+div[data-testid="InputInstructions"] { display: none; }
 .terminal-box {
     background: #050508;
     border: 1px solid #1a1a2e;
@@ -167,7 +168,10 @@ with tab2:
         )
     with col2:
         st.markdown("<div style='height:28px'></div>", unsafe_allow_html=True)
-        run = st.button("▶ RUN", disabled=not topic.strip())
+        run = st.button("▶ RUN")
+
+    if run and not topic.strip():
+        st.warning("Please enter a topic first!")
  
     st.markdown("---")
  
