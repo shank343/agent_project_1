@@ -146,6 +146,8 @@ with tab1:
     st.markdown("### Process Flow")
  
     st.image("research_graph.png", use_container_width=True)
+    st.markdown("---")
+    st.info("👉 Click on the **RESEARCH** tab above to start researching any topic!")
  
  
 # ════════════════════════════════════════════════════════════════
@@ -255,6 +257,14 @@ with tab2:
  
             st.markdown("---")
             st.markdown(result["report"])
+            st.markdown("---")
+            st.markdown("**Sources consulted**")
+            seen = set()
+            for f in result["findings"]:
+                url = f.get("url", "")
+                if url and url not in seen:
+                    seen.add(url)
+                    st.markdown(f"- [{f['title']}]({url})")
             runs = list(
                 client.list_runs(
                     project_name="agent-project",
@@ -264,6 +274,8 @@ with tab2:
             )
 
             if runs:
+                st.markdown("---")
+                st.markdown("**LangSmith**")
                 share_link = client.share_run(runs[0].id)
                 st.markdown(f"🔍 [View LangSmith Trace]({share_link})")
  

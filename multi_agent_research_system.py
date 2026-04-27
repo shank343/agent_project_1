@@ -152,7 +152,8 @@ def search_agent(state: SearchTaskState) -> dict:
         results.append({
             "title": r.get("title", query),
             "detail": r.get("content", "")[:1000],
-            "source_query": query
+            "source_query": query,
+            "url": r.get("url", "")
         })
 
     # Fallback if Tavily returns nothing
