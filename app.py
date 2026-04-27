@@ -147,7 +147,7 @@ with tab1:
  
     st.image("research_graph.png", use_container_width=True)
     st.markdown("---")
-    st.info("👉 Click on the **RESEARCH** tab above to start researching any topic!")
+    st.info("👉 Click on the **RESEARCH** tab to start researching any topic!")
  
  
 # ════════════════════════════════════════════════════════════════
