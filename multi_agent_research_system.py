@@ -21,8 +21,29 @@ from pydantic import BaseModel, Field
 import operator
 import json
 from dotenv import load_dotenv
+import os
 
 load_dotenv()
+
+TAVILY_KEYS = [
+    os.getenv("TAVILY_API_KEY_1"),
+    os.getenv("TAVILY_API_KEY_2"),
+]
+
+_key_index = 0
+
+def get_tavily_response(query, **kwargs):
+    global _key_index
+    for _ in range(len(TAVILY_KEYS)):
+        try:
+            client = TavilyClient(api_key=TAVILY_KEYS[_key_index])
+            return client.search(query, **kwargs)
+        except Exception as e:
+            if "429" in str(e) or "quota" in str(e).lower() or "credit" in str(e).lower():
+                _key_index = (_key_index + 1) % len(TAVILY_KEYS)
+            else:
+                raise e
+    raise Exception("All Tavily API keys exhausted!")
 
 llm = ChatGroq(model="llama-3.1-8b-instant", temperature=0)
 creative_llm = ChatGroq(model="llama-3.1-8b-instant", temperature=0.7)
@@ -140,11 +161,10 @@ def search_agent(state: SearchTaskState) -> dict:
     """
     query = state["search_query"]
     
-    tavily = TavilyClient()  # picks up TAVILY_API_KEY from .env automatically
-    response = tavily.search(
-        query=query,
-        search_depth="fast",  # deep mode
-        max_results=3
+    response = get_tavily_response(
+    query,
+    search_depth="fast",
+    max_results=3
     )
 
     results = []
