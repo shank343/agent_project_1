@@ -204,7 +204,7 @@ def dispatch_searches(state: ResearchState) -> list[Send]:
 def analyst(state: ResearchState) -> dict:
     """Reads all findings from the blackboard and synthesizes."""
     time.sleep(3)
-    findings_text = json.dumps(state["findings"], indent=2)
+    findings_text = json.dumps(state["findings"], separators=(',', ':'))
 
     response = llm.invoke(
         [
