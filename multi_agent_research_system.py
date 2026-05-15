@@ -20,6 +20,7 @@ from typing import Literal
 from pydantic import BaseModel, Field
 import operator
 import json
+from langdetect import detect
 from dotenv import load_dotenv
 import os
 
@@ -168,14 +169,16 @@ def search_agent(state: SearchTaskState) -> dict:
     max_results=3
     )
 
-    results = []
-    for r in response.get("results", []):
-        results.append({
+    results = [
+        {
             "title": r.get("title", query),
-            "detail": r.get("content", "")[:875],
+            "detail": r.get("content", "")[:1000],
             "source_query": query,
             "url": r.get("url", "")
-        })
+        }
+        for r in response.get("results", [])
+        if detect(r.get("content", "")[:300] or "en") == "en"
+    ]
 
     # Fallback if Tavily returns nothing
     if not results:

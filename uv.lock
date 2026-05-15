@@ -22,6 +22,7 @@ dependencies = [
     { name = "fastapi" },
     { name = "langchain" },
     { name = "langchain-groq" },
+    { name = "langdetect" },
     { name = "langgraph" },
     { name = "langsmith" },
     { name = "streamlit" },
@@ -35,6 +36,7 @@ requires-dist = [
     { name = "fastapi", specifier = ">=0.136.1" },
     { name = "langchain", specifier = ">=1.2.15" },
     { name = "langchain-groq", specifier = ">=1.1.2" },
+    { name = "langdetect", specifier = ">=1.0.9" },
     { name = "langgraph", specifier = ">=1.1.9" },
     { name = "langsmith", specifier = ">=0.7.35" },
     { name = "streamlit", specifier = ">=1.56.0" },
@@ -460,6 +462,15 @@ sdist = { url = "https://files.pythonhosted.org/packages/d0/bb/38b5eaefa41c67735
 wheels = [
     { url = "https://files.pythonhosted.org/packages/0b/fa/6a8ecad8472b182f2caf9d83fd89f40fc1590cb96546d90089b7869b7f5e/langchain_protocol-0.0.11-py3-none-any.whl", hash = "sha256:364da1faf6f5d3001413bede792c1a822c0f23ae55d1ce1266ca7d8e80e79011", size = 6778, upload-time = "2026-04-23T22:13:15.712Z" },
 ]
+
+[[package]]
+name = "langdetect"
+version = "1.0.9"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "six" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/0e/72/a3add0e4eec4eb9e2569554f7c70f4a3c27712f40e3284d483e88094cc0e/langdetect-1.0.9.tar.gz", hash = "sha256:cbc1fef89f8d062739774bd51eda3da3274006b3661d199c2655f6b3f6d605a0", size = 981474, upload-time = "2021-05-07T07:54:13.562Z" }
 
 [[package]]
 name = "langgraph"
