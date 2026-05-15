@@ -87,6 +87,7 @@ def supervisor(state: ResearchState) -> dict:
                     "You are a research supervisor. Given a topic, generate between 3 and 5 "
                     "specific search queries based on how complex the topic is. "
                     "Simple topics need 3, complex topics need 5. "
+                    "Query cannot consist only of site: operators. "
                     "Return ONLY a JSON array of strings. No markdown formatting."
                 )
             ),
@@ -171,7 +172,7 @@ def search_agent(state: SearchTaskState) -> dict:
     for r in response.get("results", []):
         results.append({
             "title": r.get("title", query),
-            "detail": r.get("content", "")[:1000],
+            "detail": r.get("content", "")[:875],
             "source_query": query,
             "url": r.get("url", "")
         })
