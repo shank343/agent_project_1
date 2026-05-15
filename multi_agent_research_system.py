@@ -172,7 +172,7 @@ def search_agent(state: SearchTaskState) -> dict:
     results = [
         {
             "title": r.get("title", query),
-            "detail": r.get("content", "")[:1000],
+            "detail": r.get("content", "")[:875],
             "source_query": query,
             "url": r.get("url", "")
         }
